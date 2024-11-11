@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Singapore Port Arrival Schedule</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container text-center py-4">
+  <h1>Singapore Port Schedule</h1>
+  </div>
+
+  <!-- Guest Interface -->
+  <div class="guest-section" id="guest-section" style="display: none;">
+    <div class="container text-center">
+      <img src="Schedule.png" alt="Arrival Schedule" class="img-fluid">
+
+      <p>To request changes to schedule, please fill in your reason and conditions below:</p>
+      <textarea id="guest-input" placeholder="Enter your request for schedule changes..."></textarea>
+      <br>
+      <button onclick="submitGuestRequest()">Submit Request</button>
+      <p id="guest-message"></p>
+
+      <p>*Requests will be subject to acceptance, successful requests will be notified within 24 hours.</p>
+    </div>
+  </div>
+
+  <!-- User Interface -->
+  <div class="user-section" id="user-section" style="display: none;">
+  <div class="container text-center py-5">
+    <h2>User Approval Interface</h2>
+    <div id="requests-container">
+      <p>No requests pending.</p>
+    </div>
+    <button onclick="approveRequest()">Approve Selected Request</button>
+    <p id="user-message"></p>
+  </div>
+</div>
+
+  <script>
+    // Example role, can be dynamically set by server-side logic or query parameters
+    const role = 'user';  // Change this to 'guest' to test the guest interface
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (role === 'guest') {
+        document.getElementById('guest-section').style.display = 'block';
+      } else if (role === 'user') {
+        document.getElementById('user-section').style.display = 'block';
+        loadRequests();
+      }
+    });
+
+    function submitGuestRequest() {
+      const request = document.getElementById('guest-input').value;
+      if (request.trim() === '') {
+        document.getElementById('guest-message').innerText = 'Please enter a valid request.';
+        return;
+      }
+      // Simulate sending request to the server
+      console.log('Guest request submitted:', request);
+      document.getElementById('guest-message').innerText = 'Request submitted successfully!';
+      document.getElementById('guest-input').value = '';
+    }
+
+    function loadRequests() {
+      // Simulate loading requests from the server
+      document.getElementById('requests-container').innerHTML = `
+        <label><input type="checkbox" name="requests" value="Request 1"> Request 1: Vessel 001 has been attacked by pirates and will be delayed</label><br>
+        <label><input type="checkbox" name="requests" value="Request 2"> Request 2: Vessel 002 requesting for arrival to be brought forward from 11 Nov to 10 Nov</label>
+      `;
+    }
+
+    function approveRequest() {
+      const checkboxes = document.querySelectorAll('input[name="requests"]:checked');
+      if (checkboxes.length === 0) {
+        document.getElementById('user-message').innerText = 'No request selected for approval.';
+        return;
+      }
+      const approvedRequests = Array.from(checkboxes).map(cb => cb.value);
+      console.log('Approved requests:', approvedRequests);
+      document.getElementById('user-message').innerText = 'Requests approved successfully!';
+    }
+  </script>
+
+</body>
+
+</html>
